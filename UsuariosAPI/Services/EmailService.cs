@@ -38,7 +38,7 @@ namespace UsuariosAPI.Services
                         _configuration.GetValue<int>("EmailSettings:Port"), true);
 
                     // Autenticar email
-                    client.AuthenticationMechanisms.Remove("XOUATH2");
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
                     client.Authenticate(_configuration.GetValue<string>("EmailSettings:From"),
                         _configuration.GetValue<string>("EmailSettings:Password"));
 

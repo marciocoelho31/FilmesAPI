@@ -21,6 +21,9 @@ namespace UsuariosAPI
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            // para fazer com que o Program leia valores do conteudo do User Secrets
+            .ConfigureAppConfiguration((context, builder) =>
+                builder.AddUserSecrets<Program>());
     }
 }

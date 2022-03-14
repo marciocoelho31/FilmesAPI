@@ -39,9 +39,7 @@ namespace UsuariosAPI.Services
                 _userManager.CreateAsync(usuarioIdentity, createDto.Password);
             if (resultadoIdentity.Result.Succeeded)
             {
-                var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
-
-                var usuarioRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "admin").Result;
+                _userManager.AddToRoleAsync(usuarioIdentity, "regular");
 
                 string codigoAtivacao = 
                     _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result;

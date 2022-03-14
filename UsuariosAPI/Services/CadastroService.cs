@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using UsuariosAPI.Data;
 using UsuariosAPI.Data.Dtos;
 using UsuariosAPI.Data.Requests;
@@ -16,11 +17,14 @@ namespace UsuariosAPI.Services
     {
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser<int>> _userManager;
+        private readonly EmailService _emailService;
 
-        public CadastroService(IMapper mapper, UserManager<IdentityUser<int>> userManager)
+        public CadastroService(IMapper mapper, UserManager<IdentityUser<int>> userManager, 
+            EmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
+            _emailService = emailService;
         }
 
         public Result CadastrarUsuario(CreateUsuarioDto createDto)
@@ -35,7 +39,15 @@ namespace UsuariosAPI.Services
             {
                 string codigoAtivacao = 
                     _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity).Result;
-                return Result.Ok().WithSuccess(codigoAtivacao);
+                string codigoAtivacaoEncoded = HttpUtility.UrlEncode(codigoAtivacao);
+
+                _emailService.EnviarEmail(
+                    new[] {usuarioIdentity.Email }, 
+                    "Link de ativação",
+                    usuarioIdentity.Id, 
+                    codigoAtivacao);
+
+                return Result.Ok().WithSuccess(codigoAtivacaoEncoded);
             }
 
             return Result.Fail("Falha ao cadastrar usuário");

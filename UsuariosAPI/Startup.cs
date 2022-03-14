@@ -51,6 +51,7 @@ namespace UsuariosAPI
             services.AddScoped<LoginService>();
             services.AddScoped<LogoutService>();
             services.AddScoped<TokenService>();
+            services.AddScoped<EmailService>();
 
             services.AddControllers();
 

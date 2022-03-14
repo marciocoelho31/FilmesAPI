@@ -32,8 +32,8 @@ namespace UsuariosAPI.Controllers
             return Ok(resultado.Successes.FirstOrDefault());
         }
 
-        [HttpPost("/ativar")]
-        public IActionResult AtivarContaUsuario(AtivaContaRequest request)
+        [HttpGet("/ativar")]
+        public IActionResult AtivarContaUsuario([FromQuery] AtivaContaRequest request)
         {
             Result resultado = _cadastroService.AtivarContaUsuario(request);
             if (resultado.IsFailed)

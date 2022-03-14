@@ -33,8 +33,12 @@ namespace UsuariosAPI
             services.AddDbContext<UserDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("UsuarioConnection"))
             );
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-                .AddEntityFrameworkStores<UserDbContext>();
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+                    opt => opt.SignIn.RequireConfirmedEmail = true
+                )
+                .AddEntityFrameworkStores<UserDbContext>()
+                .AddDefaultTokenProviders() // para gerar o codigo de ativação quando cadastrar o usuario
+                ;
             
             services.Configure<IdentityOptions>(options =>
             {
@@ -42,9 +46,11 @@ namespace UsuariosAPI
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 8;
             });
-            /**/
 
             services.AddScoped<CadastroService>();
+            services.AddScoped<LoginService>();
+            services.AddScoped<LogoutService>();
+            services.AddScoped<TokenService>();
 
             services.AddControllers();
 

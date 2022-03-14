@@ -11,10 +11,10 @@ namespace UsuariosAPI.Services
 {
     public class LoginService
     {
-        private readonly SignInManager<IdentityUser<int>> _signinManager;
+        private readonly SignInManager<CustomIdentityUser> _signinManager;
         private readonly TokenService _tokenService;
 
-        public LoginService(SignInManager<IdentityUser<int>> signinManager, TokenService tokenService)
+        public LoginService(SignInManager<CustomIdentityUser> signinManager, TokenService tokenService)
         {
             _signinManager = signinManager;
             _tokenService = tokenService;
@@ -40,7 +40,7 @@ namespace UsuariosAPI.Services
 
         public Result SolicitarResetSenhaUsuario(SolicitaResetRequest request)
         {
-            IdentityUser<int> identityUser = RecuperaUsuarioPorEmail(request.Email);
+            CustomIdentityUser identityUser = RecuperaUsuarioPorEmail(request.Email);
 
             if (identityUser != null)
             {
@@ -53,7 +53,7 @@ namespace UsuariosAPI.Services
 
         public Result EfetuarResetSenhaUsuario(EfetuaResetRequest request)
         {
-            IdentityUser<int> identityUser = RecuperaUsuarioPorEmail(request.Email);
+            CustomIdentityUser identityUser = RecuperaUsuarioPorEmail(request.Email);
 
             IdentityResult resultadoIdentity = _signinManager.UserManager
                 .ResetPasswordAsync(identityUser, request.Token, request.Password).Result;
@@ -65,7 +65,7 @@ namespace UsuariosAPI.Services
             return Result.Fail("Falha ao tentar redefinir senha");
         }
 
-        private IdentityUser<int> RecuperaUsuarioPorEmail(string email)
+        private CustomIdentityUser RecuperaUsuarioPorEmail(string email)
         {
             return _signinManager.UserManager.Users
                 .FirstOrDefault(u => u.NormalizedEmail == email.ToUpper());
